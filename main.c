@@ -84,8 +84,6 @@ void printState (const struct gameState *gms) {
 		SetConsoleTextAttribute (h, wOldColorAttrs);
 		printf("\n");
 	}
-
-	SetConsoleTextAttribute (h, wOldColorAttrs);
 }
 
 #endif
