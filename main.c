@@ -133,17 +133,27 @@ void inc (struct gameState *gms, int r, int c, int k) {
 	}
 }
 
+int maxK (int *nums) {
+	int i = MAXNUM;
+	
+	while (nums[i] == 0)
+		i--;
+
+	return i;
+}
+
 int cost (struct gameState *gms, int r, int c, int k) {
 	if (gms->kmap[r][c] == 0) 
 		return -1;
 	
 	if (gms->kmap[r][c] > 0) {
-		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM)
-			return 1;
-		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
+		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
+			return 1 + (maxK(gms->nums[3 - gms->turn]) > gms->kmap[r][c]);
+
+		if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
 			return gms->kmap[r][c];
 	}
-
+	
 	return 0;
 }
 
@@ -274,10 +284,14 @@ int main () {
 	init(&gms);
 
 #ifdef DEBUG
-		printState(&gms);
+	printState(&gms);
 #endif
 
 	game(&gms);
+
+#ifdef DEBUG
+	scanf("%*d");
+#endif
 
 	return 0;
 }
