@@ -1,4 +1,5 @@
 #define DEBUG
+// #define READK
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +14,10 @@
 #include <windows.h>
 #endif
 
+#ifdef READK
+FILE *kFile;
+#endif
+
 struct Move {
   int r, c, k;
 };
@@ -22,7 +27,7 @@ struct gameState {
 		pmap[SIZEROW+2][SIZECOL+2],
 		player, eplayer,
 		turn,
-		qMoves;
+		qMoves;		
 
 	struct Move move[3];
 	int nums[3][MAXNUM+1];
@@ -55,16 +60,24 @@ void init (struct gameState *gms) {
 #ifdef DEBUG
 	srand(time(NULL));
 #endif
+
+#ifdef READK
+	kFile = fopen("k.txt", "r");
+#endif
 }
 
 #ifdef DEBUG
 
 void getK (struct gameState *gms) {
 	int i;
-	
+
+#ifdef READK
+	fscanf(kFile, "%d", &i);
+#else	
 	do {
 		i = rand() % 20 + 1;
 	} while (gms->nums[gms->turn][i] == 0);
+#endif
 
 	gms->move[gms->turn].k = i;
 }
@@ -272,7 +285,7 @@ void game (struct gameState *gms) {
 
 #ifdef DEBUG
 		printState(gms);
-		// scanf("%*d");
+		scanf("%*d");
 #endif
 		gms->turn = 3 - gms->turn;
 	}
