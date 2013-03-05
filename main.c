@@ -24,7 +24,7 @@ struct gameState {
 		turn,
 		qMoves;
 
-	struct Move mPlayer[3];
+	struct Move move[3];
 	int nums[3][MAXNUM+1];
 };
 
@@ -59,14 +59,14 @@ void init (struct gameState *gms) {
 
 #ifdef DEBUG
 
-void getRandomK (struct gameState *gms) {
+void getK (struct gameState *gms) {
 	int i;
 	
 	do {
 		i = rand() % 20 + 1;
 	} while (gms->nums[gms->turn][i] == 0);
 
-	gms->mPlayer[gms->turn].k = i;
+	gms->move[gms->turn].k = i;
 }
 
 void fillMap (struct gameState *gms) {
@@ -113,7 +113,7 @@ void printState (const struct gameState *gms) {
 		printf("\n");
 	}
 
-	printf("k = %d\n", gms->mPlayer[gms->turn].k);
+	printf("k = %d\n", gms->move[gms->turn].k);
 
 	for (i = 1; i <= 2; i++) {
 		SetConsoleTextAttribute(h, (1 << i) | FOREGROUND_INTENSITY);
@@ -158,7 +158,7 @@ int cost (struct gameState *gms, int r, int c, int k) {
 }
 
 void makeMove (struct gameState *gms) {
-	struct Move mv = gms->mPlayer[gms->turn];
+	struct Move mv = gms->move[gms->turn];
 
 	gms->kmap[mv.r][mv.c] = mv.k;
 	gms->pmap[mv.r][mv.c] = gms->turn;
@@ -213,8 +213,8 @@ void getRandomMove (struct gameState *gms) {
 		c = rand() % SIZECOL + 1;
 	} while (gms->pmap[r][c] > 0);
 
-	gms->mPlayer[gms->turn].r = r;
-	gms->mPlayer[gms->turn].c = c;
+	gms->move[gms->turn].r = r;
+	gms->move[gms->turn].c = c;
 }
 
 void getGreedlyMove (struct gameState *gms) {
@@ -225,7 +225,7 @@ void getGreedlyMove (struct gameState *gms) {
 	for (i = 1; i <= SIZEROW; i++)
 		for (j = 1; j <= SIZECOL; j++) 
 			if (gms->pmap[i][j] == 0) {
-				int t = value(gms, i, j, gms->mPlayer[gms->turn].k);
+				int t = value(gms, i, j, gms->move[gms->turn].k);
 
 				if (t > max) {
 					max = t;
@@ -233,8 +233,8 @@ void getGreedlyMove (struct gameState *gms) {
 				}
 			}
 
-	gms->mPlayer[gms->turn].r = r;
-	gms->mPlayer[gms->turn].c = c;
+	gms->move[gms->turn].r = r;
+	gms->move[gms->turn].c = c;
 }
 
 void getMove (struct gameState *gms) {
@@ -249,21 +249,21 @@ void game (struct gameState *gms) {
 	while (!end (gms)) {
 		if (gms->turn == gms->eplayer) {
 #ifdef DEBUG
-			getRandomK(gms);
+			getK(gms);
 			getGreedlyMove(gms);
 #else
-			readMove(&(gms->mPlayer[gms->turn]));
+			readMove(&(gms->move[gms->turn]));
 #endif
 		} else {
 #ifdef DEBUG
-			getRandomK(gms);
+			getK(gms);
 			
-			printf("k = %d\n", gms->mPlayer[gms->turn].k);
-			scanf("%d %d", &((gms->mPlayer[gms->turn]).r), &((gms->mPlayer[gms->turn]).c));
+			printf("k = %d\n", gms->move[gms->turn].k);
+			scanf("%d %d", &((gms->move[gms->turn]).r), &((gms->move[gms->turn]).c));
 
 			// getGreedlyMove(gms);
 #else
-			scanf("%d", &((gms->mPlayer[gms->turn]).k));
+			scanf("%d", &((gms->move[gms->turn]).k));
 			getMove(gms);
 #endif
 		}
