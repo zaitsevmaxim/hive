@@ -1,5 +1,7 @@
 #define DEBUG
 // #define READK
+#define MCTRL
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,7 +21,7 @@ FILE *kFile;
 #endif
 
 struct Move {
-  int r, c, k;
+	int r, c, k;
 };
 
 struct gameState {
@@ -66,11 +68,12 @@ void init (struct gameState *gms) {
 #endif
 }
 
-#ifdef DEBUG
-
 void getK (struct gameState *gms) {
 	int i;
 
+#ifndef DEBUG
+	scanf("%d", &i);
+#else 
 #ifdef READK
 	fscanf(kFile, "%d", &i);
 #else	
@@ -78,6 +81,7 @@ void getK (struct gameState *gms) {
 		i = rand() % 20 + 1;
 	} while (gms->nums[gms->turn][i] == 0);
 #endif
+#endif 
 
 	gms->move[gms->turn].k = i;
 }
@@ -93,6 +97,7 @@ void fillMap (struct gameState *gms) {
 	}
 }
 
+#ifdef DEBUG
 void printState (const struct gameState *gms) {
 	HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
 	WORD wOldColorAttrs;
@@ -136,6 +141,7 @@ void printState (const struct gameState *gms) {
 
 	SetConsoleTextAttribute(h, wOldColorAttrs);
 }
+#endif
 
 void inc (struct gameState *gms, int r, int c, int k) {
 	if (gms->kmap[r][c] > 0) {
@@ -146,10 +152,10 @@ void inc (struct gameState *gms, int r, int c, int k) {
 	}
 }
 
-int maxK (int *nums) {
+int maxK (struct gameState *gms, int p) {
 	int i = MAXNUM;
 	
-	while (nums[i] == 0)
+	while (gms->nums[p][i] == 0)
 		i--;
 
 	return i;
@@ -161,7 +167,7 @@ int cost (struct gameState *gms, int r, int c, int k) {
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
-			return 1 + (maxK(gms->nums[3 - gms->turn]) > gms->kmap[r][c]);
+			return 1 + (maxK(gms, 3 - gms->turn) > gms->kmap[r][c]);
 
 		if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
 			return gms->kmap[r][c];
@@ -193,8 +199,6 @@ void makeMove (struct gameState *gms) {
 	gms->qMoves++;
 }
 
-#endif
-
 int value (struct gameState *gms, int r, int c, int k) {
 	int scr = 0;
 
@@ -214,8 +218,8 @@ int value (struct gameState *gms, int r, int c, int k) {
 	return scr;
 }
 
-void readMove (struct Move *mv) {
-	scanf("%d %d %d", &(mv->k), &(mv->r), &(mv->c));
+void readMove (struct gameState *gms) {
+	scanf("%d %d", &(gms->move[gms->turn].r), &(gms->move[gms->turn].c));
 }
 
 void getRandomMove (struct gameState *gms) {
@@ -260,21 +264,22 @@ int end (const struct gameState *gms) {
 
 void game (struct gameState *gms) {
 	while (!end (gms)) {
+		getK(gms);
+
 		if (gms->turn == gms->eplayer) {
 #ifdef DEBUG
-			getK(gms);
 			getGreedlyMove(gms);
 #else
-			readMove(&(gms->move[gms->turn]));
+			readMove(gms);
 #endif
 		} else {
 #ifdef DEBUG
-			getK(gms);
-			
+#ifdef MCTRL
 			printf("k = %d\n", gms->move[gms->turn].k);
-			scanf("%d %d", &((gms->move[gms->turn]).r), &((gms->move[gms->turn]).c));
-
-			// getGreedlyMove(gms);
+			readMove(gms);
+#else
+			getGreedlyMove(gms);
+#endif
 #else
 			scanf("%d", &((gms->move[gms->turn]).k));
 			getMove(gms);
@@ -285,7 +290,9 @@ void game (struct gameState *gms) {
 
 #ifdef DEBUG
 		printState(gms);
+#ifndef MCTRL
 		scanf("%*d");
+#endif
 #endif
 		gms->turn = 3 - gms->turn;
 	}
