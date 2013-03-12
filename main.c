@@ -143,15 +143,6 @@ void printState (const struct gameState *gms) {
 }
 #endif
 
-void inc (struct gameState *gms, int r, int c, int k) {
-	if (gms->kmap[r][c] > 0) {
-		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM)
-			gms->kmap[r][c]++;
-		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
-			gms->pmap[r][c] = gms->turn;
-	}
-}
-
 int maxK (struct gameState *gms, int p) {
 	int i = MAXNUM;
 	
@@ -168,12 +159,20 @@ int cost (struct gameState *gms, int r, int c, int k) {
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
 			return 1 + (maxK(gms, 3 - gms->turn) > gms->kmap[r][c]);
-
-		if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
+		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
 			return gms->kmap[r][c];
 	}
 	
 	return 0;
+}
+
+void inc (struct gameState *gms, int r, int c, int k) {
+	if (gms->kmap[r][c] > 0) {
+		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM)
+			gms->kmap[r][c]++;
+		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
+			gms->pmap[r][c] = gms->turn;
+	}
 }
 
 void makeMove (struct gameState *gms) {
@@ -222,6 +221,7 @@ void readMove (struct gameState *gms) {
 	scanf("%d %d", &(gms->move[gms->turn].r), &(gms->move[gms->turn].c));
 }
 
+#ifdef DEBUG
 void getRandomMove (struct gameState *gms) {
 	int r, c;
 
@@ -233,6 +233,7 @@ void getRandomMove (struct gameState *gms) {
 	gms->move[gms->turn].r = r;
 	gms->move[gms->turn].c = c;
 }
+#endif
 
 void getGreedlyMove (struct gameState *gms) {
 	int r, c,
