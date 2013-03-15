@@ -211,8 +211,10 @@ int value (struct gameState *gms, int r, int c, int k) {
 	return scr;
 }
 
-void readMove (struct gameState *gms) {
+int readMove (struct gameState *gms) {
 	scanf("%d %d", &(gms->move[gms->turn].r), &(gms->move[gms->turn].c));
+
+	return gms->kmap[gms->move[gms->turn].r][gms->move[gms->turn].c];
 }
 
 #ifdef DEBUG
@@ -271,7 +273,7 @@ void game (struct gameState *gms) {
 #ifdef DEBUG
 #ifdef MCTRL
 			printf("k = %d\n", gms->move[gms->turn].k);
-			readMove(gms);
+			while (readMove(gms));
 #else
 			getGreedlyMove(gms);
 #endif
