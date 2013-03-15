@@ -1,5 +1,4 @@
 #define DEBUG
-// #define READK
 #define MCTRL
 
 #include <stdio.h>
@@ -14,9 +13,7 @@
 #ifdef DEBUG
 #include <time.h>
 #include <windows.h>
-#endif
 
-#ifdef READK
 FILE *kFile;
 #endif
 
@@ -61,9 +58,7 @@ void init (struct gameState *gms) {
 	
 #ifdef DEBUG
 	srand(time(NULL));
-#endif
 
-#ifdef READK
 	kFile = fopen("k.txt", "r");
 #endif
 }
@@ -74,14 +69,13 @@ void getK (struct gameState *gms) {
 #ifndef DEBUG
 	scanf("%d", &i);
 #else 
-#ifdef READK
-	fscanf(kFile, "%d", &i);
-#else	
-	do {
-		i = rand() % 20 + 1;
-	} while (gms->nums[gms->turn][i] == 0);
+	if (kFile)
+		fscanf(kFile, "%d", &i);
+	else
+		do {
+			i = rand() % 20 + 1;
+		} while (gms->nums[gms->turn][i] == 0);
 #endif
-#endif 
 
 	gms->move[gms->turn].k = i;
 }
