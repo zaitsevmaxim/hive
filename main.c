@@ -322,6 +322,8 @@ void readData (struct gameState *gms) {
 	for (i = 1; i <= 2; i++)
 		for (j = 1; j <= MAXNUM; j++)
 			fscanf(d, "%d", &gms->nums[i][j]);
+
+	fclose(d);
 }
 
 void printData (struct gameState *gms) {
@@ -344,6 +346,8 @@ void printData (struct gameState *gms) {
 	for (i = 1; i <= 2; i++)
 		for (j = 1; j <= MAXNUM; j++)
 			fprintf(d, "%d ", gms->nums[i][j]);
+
+	fclose(d);
 }
 
 int main () {
@@ -386,7 +390,7 @@ int main () {
 			gms.turn = 3 - gms.turn;
 		}
 	}
-	
+
 	getK(&gms);
 	getGreedlyMove(&gms);
 	makeMove(&gms);
