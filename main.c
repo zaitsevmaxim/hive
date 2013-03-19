@@ -1,5 +1,6 @@
+#define ONEMOVE
 // #define DEBUG
-#define MCTRL
+// #define MCTRL
 
 #include <stdio.h>
 #include <string.h>
@@ -348,6 +349,22 @@ void printData (struct gameState *gms) {
 int main () {
 	struct gameState gms;
 
+#ifndef ONEMOVE
+
+	init(&gms);
+
+#ifdef DEBUG
+	printState(&gms);
+#endif
+
+	game(&gms);
+
+#ifdef DEBUG
+	scanf("%*d");
+#endif
+
+#else
+
 	FILE *data = fopen("data.txt", "r");
 
 	if (data) {
@@ -384,20 +401,7 @@ int main () {
 	printData(&gms);
 
 	fclose(data);
-
-
-	// init(&gms);
-
-#ifdef DEBUG
-	printState(&gms);
-#endif
-
-	// game(&gms);
-
-
-
-#ifdef DEBUG
-	scanf("%*d");
+	
 #endif
 
 	return 0;
