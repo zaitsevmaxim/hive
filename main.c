@@ -146,13 +146,25 @@ int maxK (struct gameState *gms, int p) {
 	return i;
 }
 
-int cost (struct gameState *gms, int r, int c, int k) {
+double chanceConquest (struct gameState *gms, int k) {
+	int w = 0, a = 0, i;
+
+	for (i = 1; i <= MAXNUM; i++) {
+		if (i > k)
+			w += gms->nums[3-gms->turn][i];
+		a += gms->nums[3-gms->turn][i];
+	}
+
+	return w / a;
+}
+
+double cost (struct gameState *gms, int r, int c, int k) {
 	if (gms->kmap[r][c] == 0) 
 		return -1;
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
-			return 1 + (maxK(gms, 3 - gms->turn) > gms->kmap[r][c]);
+			return 1 + chanceConquest(gms, gms->kmap[r][c])*gms->kmap[r][c];
 		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
 			return gms->kmap[r][c];
 	}
@@ -192,8 +204,8 @@ void makeMove (struct gameState *gms) {
 	gms->qMoves++;
 }
 
-int value (struct gameState *gms, int r, int c, int k) {
-	int scr = 0;
+double value (struct gameState *gms, int r, int c, int k) {
+	double scr = 0;
 
 	scr += cost(gms, r, c-1, k);
 	scr += cost(gms, r, c+1, k);
@@ -233,13 +245,13 @@ void getRandomMove (struct gameState *gms) {
 
 void getGreedlyMove (struct gameState *gms) {
 	int r, c,
-		i, j,
-		max = -INF;
+		i, j;
+	double max = -INF;
 
 	for (i = 1; i <= SIZEROW; i++)
 		for (j = 1; j <= SIZECOL; j++) 
 			if (gms->pmap[i][j] == 0) {
-				int t = value(gms, i, j, gms->move[gms->turn].k);
+				double t = value(gms, i, j, gms->move[gms->turn].k);
 
 				if (t > max) {
 					max = t;
