@@ -375,33 +375,30 @@ int main () {
 		makeMove(&gms);
 
 		gms.turn = 3 - gms.turn;
-
-		getK(&gms);
-		getGreedlyMove(&gms);
-		makeMove(&gms);
-
-		printf("%d %d", gms.move[gms.turn].r, gms.move[gms.turn].c);
 	} else {
 		init(&gms);
 
-		getK(&gms);
-
-		if (gms.turn == gms.eplayer) 
+		if (gms.turn == gms.eplayer) {
+			getK(&gms);
 			readMove(&gms);
-		else {
-			getGreedlyMove(&gms);
-			printf("%d %d", gms.move[gms.turn].r, gms.move[gms.turn].c);
-		}
+			makeMove(&gms);
 
-		makeMove(&gms);
+			gms.turn = 3 - gms.turn;
+		}
 	}
+	
+	getK(&gms);
+	getGreedlyMove(&gms);
+	makeMove(&gms);
+
+	printf("%d %d", gms.move[gms.turn].r, gms.move[gms.turn].c);
 
 	gms.turn = 3 - gms.turn;
 
 	printData(&gms);
 
 	fclose(data);
-	
+
 #endif
 
 	return 0;
