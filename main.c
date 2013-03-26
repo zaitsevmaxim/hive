@@ -1,6 +1,6 @@
 #define DEBUG
 #define MCTRL
-#define HANDLE_TACTIC
+// #define HANDLE_TACTIC
 
 #include <stdio.h>
 #include <string.h>
@@ -288,16 +288,15 @@ void game (struct gameState *gms) {
 			readMove(gms);
 #endif
 		} else {
-#ifdef DEBUG
+#ifndef DEBUG
+			getGreedlyMove(gms);
+#else
 #ifdef MCTRL
 			printf("k = %d\n", gms->move[gms->turn].k);
 			while (readMove(gms));
 #else
 			getGreedlyMove(gms);
 #endif
-#else
-			scanf("%d", &((gms->move[gms->turn]).k));
-			getGreedlyMove(gms);
 #endif
 		}
 
