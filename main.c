@@ -131,9 +131,9 @@ void printState (const struct gameState *gms) {
 
 	for (i = 1; i <= 2; i++) {
 		SetConsoleTextAttribute(h, (1 << i) | FOREGROUND_INTENSITY);
-		printf("%4d", score[i]);
+		printf("%d ", score[i]);
 	}
-	printf("\n");
+	printf("\n\n");
 
 	SetConsoleTextAttribute(h, wOldColorAttrs);
 }
