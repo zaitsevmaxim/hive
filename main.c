@@ -306,7 +306,7 @@ void game (struct gameState *gms) {
 #ifdef DEBUG
 		printState(gms);
 #ifndef MCTRL
-		scanf("%*d");
+		system("pause");;
 #endif
 #endif
 		gms->turn = 3 - gms->turn;
@@ -325,7 +325,7 @@ int main () {
 	game(&gms);
 
 #ifdef DEBUG
-	scanf("%*d");
+	system("pause");;
 #endif
 
 	return 0;
