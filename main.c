@@ -273,10 +273,6 @@ void getGreedlyMove (struct gameState *gms) {
 	gms->move[gms->turn].c = c;
 }
 
-void getMove (struct gameState *gms) {
-
-}
-
 int end (const struct gameState *gms) {
 	return gms->qMoves == SIZEROW * SIZECOL;
 }
@@ -301,7 +297,7 @@ void game (struct gameState *gms) {
 #endif
 #else
 			scanf("%d", &((gms->move[gms->turn]).k));
-			getMove(gms);
+			getGreedlyMove(gms);
 #endif
 		}
 
