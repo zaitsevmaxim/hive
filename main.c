@@ -245,6 +245,10 @@ int readMove (struct gameState *gms) {
 	return gms->kmap[gms->move[gms->turn].r][gms->move[gms->turn].c];
 }
 
+void changePlayer (struct gamestate* gms) {
+	gms -> turn = 3 - gms->turn;
+}
+
 #ifdef DEBUG
 void getRandomMove (struct gameState *gms) {
 	int r, c;
@@ -325,7 +329,7 @@ void game (struct gameState *gms) {
 		system("pause");
 #endif
 #endif
-		gms->turn = 3 - gms->turn;
+		changePlayer(gms);
 	}
 }
 
@@ -404,7 +408,7 @@ int main () {
 		readMove(&gms);
 		makeMove(&gms);
 
-		gms.turn = 3 - gms.turn;
+		changePlayer(&gms);
 	} else {
 		init(&gms);
 
@@ -413,7 +417,7 @@ int main () {
 			readMove(&gms);
 			makeMove(&gms);
 
-			gms.turn = 3 - gms.turn;
+			changePlayer(&gms);
 		}
 	}
 
@@ -423,7 +427,7 @@ int main () {
 
 	printf("%d %d", gms.move[gms.turn].r, gms.move[gms.turn].c);
 
-	gms.turn = 3 - gms.turn;
+	changePlayer(&gms);
 
 	printData(&gms);
 
