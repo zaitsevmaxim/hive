@@ -167,7 +167,6 @@ double cost (struct gameState *gms, int r, int c, int k) {
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
-<<<<<<< HEAD
 			return 1 + 
 #ifdef HANDLE_TACTIC
 				gms->DefQ*
