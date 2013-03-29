@@ -1,6 +1,7 @@
 #define DEBUG
 #define MCTRL
 // #define HANDLE_TACTIC
+#define ONEMOVE
 
 #include <stdio.h>
 #include <string.h>
@@ -312,8 +313,58 @@ void game (struct gameState *gms) {
 	}
 }
 
+void readData (struct gameState *gms) {
+	int i, j;
+	FILE *d = fopen("data.txt", "r");
+
+	for (i = 0; i <= SIZEROW+1; i++)
+		for (j = 0; j <= SIZECOL+1; j++) 
+			fscanf(d, "%d", &gms->kmap[i][j]);
+
+	for (i = 0; i <= SIZEROW+1; i++)
+		for (j = 0; j <= SIZECOL+1; j++) 
+			fscanf(d, "%d", &gms->pmap[i][j]);
+
+	fscanf(d, "%d %d %d %d %d %d", &gms->player, &gms->eplayer, &gms->turn, &gms->qMoves, &gms->AttQ, &gms->DefQ);
+
+	for (i = 1; i <= 2; i++)
+		fscanf(d, "%d %d", &gms->move[i].r, &gms->move[i].c, &gms->move[i].k);
+
+	for (i = 1; i <= 2; i++)
+		for (j = 1; j <= MAXNUM; j++)
+			fscanf(d, "%d", &gms->nums[i][j]);
+
+	fclose(d);
+}
+
+void printData (struct gameState *gms) {
+	int i, j;
+	FILE *d = fopen("data.txt", "w");
+
+	for (i = 0; i <= SIZEROW+1; i++)
+		for (j = 0; j <= SIZECOL+1; j++) 
+			fprintf(d, "%d ", gms->kmap[i][j]);
+
+	for (i = 0; i <= SIZEROW+1; i++)
+		for (j = 0; j <= SIZECOL+1; j++) 
+			fprintf(d, "%d ", gms->pmap[i][j]);
+
+	fprintf(d, "%d %d %d %d %d %d ", gms->player, gms->eplayer, gms->turn, gms->qMoves, gms->AttQ, gms->DefQ);
+
+	for (i = 1; i <= 2; i++)
+		fprintf(d, "%d %d ", gms->move[i].r, gms->move[i].c, gms->move[i].k);
+
+	for (i = 1; i <= 2; i++)
+		for (j = 1; j <= MAXNUM; j++)
+			fprintf(d, "%d ", gms->nums[i][j]);
+
+	fclose(d);
+}
+
 int main () {
 	struct gameState gms;
+
+#ifndef ONEMOVE
 
 	init(&gms);
 
@@ -325,6 +376,44 @@ int main () {
 
 #ifdef DEBUG
 	system("pause");
+#endif
+
+#else
+
+	FILE *data = fopen("data.txt", "r");
+
+	if (data) {
+		readData(&gms);
+
+		getK(&gms);
+		readMove(&gms);
+		makeMove(&gms);
+
+		gms.turn = 3 - gms.turn;
+	} else {
+		init(&gms);
+
+		if (gms.turn == gms.eplayer) {
+			getK(&gms);
+			readMove(&gms);
+			makeMove(&gms);
+
+			gms.turn = 3 - gms.turn;
+		}
+	}
+
+	getK(&gms);
+	getGreedlyMove(&gms);
+	makeMove(&gms);
+
+	printf("%d %d", gms.move[gms.turn].r, gms.move[gms.turn].c);
+
+	gms.turn = 3 - gms.turn;
+
+	printData(&gms);
+
+	fclose(data);
+
 #endif
 
 	return 0;
