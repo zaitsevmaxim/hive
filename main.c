@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 #define SIZEROW 10
 #define SIZECOL 12
 #define MAXNUM 20
@@ -115,8 +116,10 @@ void printState (const struct gameState *gms) {
 
 	for (i = 1; i <= SIZEROW; i++) {
 		printf("%2d", i);
+		
 		if (i % 2 == 1)
 			printf("  ");
+
 		for (j = 1; j <= SIZECOL; j++) {
 			SetConsoleTextAttribute(h, (gms->pmap[i][j] ? 1 << gms->pmap[i][j] : 0) | FOREGROUND_INTENSITY);
 			printf("%4d", gms->kmap[i][j]);
@@ -188,8 +191,9 @@ void inc (struct gameState *gms, int r, int c, int k) {
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM)
 			gms->kmap[r][c]++;
-		else if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
-			gms->pmap[r][c] = gms->turn;
+		else 
+			if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
+				gms->pmap[r][c] = gms->turn;
 	}
 }
 
@@ -377,7 +381,6 @@ int main () {
 	struct gameState gms;
 
 #ifndef ONEMOVE
-
 	init(&gms);
 
 #ifdef DEBUG
@@ -391,7 +394,7 @@ int main () {
 #endif
 
 #else
-
+	
 	FILE *data = fopen("data.txt", "r");
 
 	if (data) {
