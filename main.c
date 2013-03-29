@@ -312,12 +312,12 @@ void game (struct gameState* gms) {
 #ifndef DEBUG
 			getGreedlyMove(gms);
 #else
-#ifdef MCTRL
+  #ifdef MCTRL
 			printf("k = %d\n", gms->move[gms->turn].k);
 			while (readMove(gms));
-#else
+  #else
 			getGreedlyMove(gms);
-#endif
+  #endif
 #endif
 		}
 
@@ -325,9 +325,9 @@ void game (struct gameState* gms) {
 
 #ifdef DEBUG
 		printState(gms);
-#ifndef MCTRL
+  #ifndef MCTRL
 		system("pause");
-#endif
+  #endif
 #endif
 		changePlayer(gms);
 	}
