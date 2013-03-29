@@ -245,8 +245,8 @@ int readMove (struct gameState* gms) {
 	return gms->kmap[gms->move[gms->turn].r][gms->move[gms->turn].c];
 }
 
-void changePlayer (struct gamestate* gms) {
-	gms -> turn = 3 - gms->turn;
+void changePlayer (struct gameState* gms) {
+	gms->turn = 3 - gms->turn;
 }
 
 #ifdef DEBUG
