@@ -36,7 +36,7 @@ struct gameState {
 	int nums[3][MAXNUM+1];
 };
 
-void init (struct gameState *gms) {
+void init (struct gameState* gms) {
 	int i; 
 
 	memset (gms, 0, sizeof(*gms));
@@ -67,7 +67,7 @@ void init (struct gameState *gms) {
 #endif
 }
 
-void getK (struct gameState *gms) {
+void getK (struct gameState* gms) {
 	int i;
 
 #ifndef DEBUG
@@ -84,7 +84,7 @@ void getK (struct gameState *gms) {
 	gms->move[gms->turn].k = i;
 }
 
-void fillMap (struct gameState *gms) {
+void fillMap (struct gameState* gms) {
 	int i, j;
 
 	for (i = 1; i <= SIZEROW; i++) {
@@ -143,7 +143,7 @@ void printState (const struct gameState *gms) {
 }
 #endif
 
-int maxK (struct gameState *gms, int p) {
+int maxK (struct gameState* gms, int p) {
 	int i = MAXNUM;
 	
 	while (gms->nums[p][i] == 0)
@@ -152,7 +152,7 @@ int maxK (struct gameState *gms, int p) {
 	return i;
 }
 
-double chanceConquest (struct gameState *gms, int k) {
+double chanceConquest (struct gameState* gms, int k) {
 	int w = 0, a = 0, i;
 
 	for (i = 1; i <= MAXNUM; i++) {
@@ -164,7 +164,7 @@ double chanceConquest (struct gameState *gms, int k) {
 	return a == 0 ? 0 : w / a;
 }
 
-double cost (struct gameState *gms, int r, int c, int k) {
+double cost (struct gameState* gms, int r, int c, int k) {
 	if (gms->kmap[r][c] == 0) 
 		return -1;
 	
@@ -187,7 +187,7 @@ double cost (struct gameState *gms, int r, int c, int k) {
 	return 0;
 }
 
-void inc (struct gameState *gms, int r, int c, int k) {
+void inc (struct gameState* gms, int r, int c, int k) {
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM)
 			gms->kmap[r][c]++;
@@ -197,7 +197,7 @@ void inc (struct gameState *gms, int r, int c, int k) {
 	}
 }
 
-void makeMove (struct gameState *gms) {
+void makeMove (struct gameState* gms) {
 	struct Move mv = gms->move[gms->turn];
 
 	gms->kmap[mv.r][mv.c] = mv.k;
@@ -220,7 +220,7 @@ void makeMove (struct gameState *gms) {
 	gms->qMoves++;
 }
 
-double value (struct gameState *gms, int r, int c, int k) {
+double value (struct gameState* gms, int r, int c, int k) {
 	double scr = 0;
 
 	scr += cost(gms, r, c-1, k);
@@ -239,7 +239,7 @@ double value (struct gameState *gms, int r, int c, int k) {
 	return scr;
 }
 
-int readMove (struct gameState *gms) {
+int readMove (struct gameState* gms) {
 	scanf("%d %d", &(gms->move[gms->turn].r), &(gms->move[gms->turn].c));
 
 	return gms->kmap[gms->move[gms->turn].r][gms->move[gms->turn].c];
@@ -250,7 +250,7 @@ void changePlayer (struct gamestate* gms) {
 }
 
 #ifdef DEBUG
-void getRandomMove (struct gameState *gms) {
+void getRandomMove (struct gameState* gms) {
 	int r, c;
 
 	do {
@@ -264,13 +264,13 @@ void getRandomMove (struct gameState *gms) {
 #endif
 
 #ifdef HANDLE_TACTIC
-void setQs (struct gameState *gms) {
+void setQs (struct gameState* gms) {
 	gms->AttQ = 1 + (gms->move[gms->turn].k > maxK(gms, 3 - gms->turn) / 2);
 	gms->DefQ = 3 - gms->AttQ;
 }
 #endif
 
-void getGreedlyMove (struct gameState *gms) {
+void getGreedlyMove (struct gameState* gms) {
 	int r, c,
 		i, j;
 	double max = -INF;
@@ -298,7 +298,7 @@ int end (const struct gameState *gms) {
 	return gms->qMoves == SIZEROW * SIZECOL;
 }
 
-void game (struct gameState *gms) {
+void game (struct gameState* gms) {
 	while (!end (gms)) {
 		getK(gms);
 
@@ -333,7 +333,7 @@ void game (struct gameState *gms) {
 	}
 }
 
-void readData (struct gameState *gms) {
+void readData (struct gameState* gms) {
 	int i, j;
 	FILE *d = fopen("data.txt", "r");
 
@@ -357,7 +357,7 @@ void readData (struct gameState *gms) {
 	fclose(d);
 }
 
-void printData (struct gameState *gms) {
+void printData (struct gameState* gms) {
 	int i, j;
 	FILE *d = fopen("data.txt", "w");
 
