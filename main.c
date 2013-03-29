@@ -1,7 +1,7 @@
 #define DEBUG
 #define MCTRL
 // #define HANDLE_TACTIC
-#define ONEMOVE
+// #define ONEMOVE
 
 #include <stdio.h>
 #include <string.h>
