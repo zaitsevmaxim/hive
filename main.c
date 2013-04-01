@@ -161,7 +161,7 @@ double chanceConquest (struct gameState* gms, int k) {
 		a += gms->nums[3-gms->turn][i];
 	}
 
-	return a == 0 ? 0 : w / a;
+	return a == 0 ? 0 : w / ((double) a);
 }
 
 double cost (struct gameState* gms, int r, int c, int k) {
