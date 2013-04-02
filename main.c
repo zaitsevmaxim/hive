@@ -166,7 +166,7 @@ double chanceConquest (struct gameState* gms, int k) {
 
 double cost (struct gameState* gms, int r, int c, int k) {
 	if (gms->kmap[r][c] == 0) 
-		return -1;
+		return -1,3;
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
