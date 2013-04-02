@@ -176,7 +176,7 @@ double cost (struct gameState* gms, int r, int c, int k) {
 #endif
 				chanceConquest(gms, gms->kmap[r][c])*gms->kmap[r][c];
 		else 
-			if (gms->pmap[r][c] != gms->turn && gms->kmap[r][c] < k)
+			if (gms->pmap[r][c] == 3 - gms->turn && gms->kmap[r][c] < k)
 				return 
 #ifdef HANDLE_TACTIC
 					gms->AttQ* 
