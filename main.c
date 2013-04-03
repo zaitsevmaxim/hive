@@ -1,6 +1,5 @@
 #define DEBUG
 #define MCTRL
-// #define HANDLE_TACTIC
 // #define ONEMOVE
 
 #include <stdio.h>
@@ -197,18 +196,10 @@ double cost (struct gameState* gms, int r, int c, int k) {
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
-			return 1 + 
-#ifdef HANDLE_TACTIC
-				gms->DefQ*
-#endif
-				getWeight(gms, gms->kmap[r][c], r, c, gms->kmap[r][c]);
+			return 1 + getWeight(gms, gms->kmap[r][c], r, c, gms->kmap[r][c]);
 		else 
 			if (gms->pmap[r][c] == 3 - gms->turn && gms->kmap[r][c] < k)
-				return 
-#ifdef HANDLE_TACTIC
-					gms->AttQ* 
-#endif
-					gms->kmap[r][c];
+				return gms->kmap[r][c];
 	}
 	
 	return 0;
@@ -290,21 +281,10 @@ void getRandomMove (struct gameState* gms) {
 }
 #endif
 
-#ifdef HANDLE_TACTIC
-void setQs (struct gameState* gms) {
-	gms->AttQ = 1 + (gms->move[gms->turn].k > maxK(gms, 3 - gms->turn) / 2);
-	gms->DefQ = 3 - gms->AttQ;
-}
-#endif
-
 void getGreedlyMove (struct gameState* gms) {
 	int r, c,
 		i, j;
 	double max = -INF;
-
-#ifdef HANDLE_TACTIC
-	setQs(gms);
-#endif
 
 	for (i = 1; i <= SIZEROW; i++)
 		for (j = 1; j <= SIZECOL; j++) 
