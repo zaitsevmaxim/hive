@@ -171,7 +171,7 @@ int countCellsAround(struct gameState* gms, int r, int c) {
 }
 
 double getWeight (struct gameState* gms, int r, int c, int k) {
-	int wb = wa = 0, a = 0, i, 
+	int wb = 0, wa = 0, a = 0, i, 
 		nCellsAround = countCellsAround(gms, r, c);
 	double before, after;
 
