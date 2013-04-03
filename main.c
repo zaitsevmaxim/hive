@@ -171,7 +171,7 @@ int countCellsAround(struct gameState* gms, int r, int c) {
 	return cnt;
 }
 
-double qChanceConquest (struct gameState* gms, int r, int c, int k) {
+double getWeight (struct gameState* gms, int r, int c, int k) {
 	int wb = wa = 0, a = 0, i, 
 		nCellsAround = countCellsAround(gms, r, c);
 	double before, after;
@@ -188,7 +188,7 @@ double qChanceConquest (struct gameState* gms, int r, int c, int k) {
 	before = a == 0 ? 0 : wb / ((double) a);
 	after  = a == 0 ? 0 : wa / ((double) a);
 
-	return before + (nCellsAround == 5 ? before : before - after);
+	return 2*before*k - (nCellsAround == 5 ? 0 : after*(k+1));
 }
 
 double cost (struct gameState* gms, int r, int c, int k) {
@@ -201,7 +201,7 @@ double cost (struct gameState* gms, int r, int c, int k) {
 #ifdef HANDLE_TACTIC
 				gms->DefQ*
 #endif
-				qChanceConquest(gms, gms->kmap[r][c])*gms->kmap[r][c];
+				getWeight(gms, gms->kmap[r][c], r, c, gms->kmap[r][c]);
 		else 
 			if (gms->pmap[r][c] == 3 - gms->turn && gms->kmap[r][c] < k)
 				return 
