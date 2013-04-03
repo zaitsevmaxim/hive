@@ -152,16 +152,43 @@ int maxK (struct gameState* gms, int p) {
 	return i;
 }
 
-double chanceConquest (struct gameState* gms, int k) {
-	int w = 0, a = 0, i;
+int countCellsAround(struct gameState* gms, int r, int c) {
+	int cnt = 0;
+
+	cnt += gms->kmap[r][c-1] != 0;
+	cnt += gms->kmap[r][c+1] != 0;
+	cnt += gms->kmap[r+1][c] != 0;
+	cnt += gms->kmap[r-1][c] != 0;
+
+	if (r % 2) {
+		cnt += gms->kmap[r-1][c+1] != 0;
+		cnt += gms->kmap[r+1][c+1] != 0;
+	} else {
+		cnt += gms->kmap[r-1][c-1] != 0;
+		cnt += gms->kmap[r+1][c-1] != 0;
+	}
+
+	return cnt;
+}
+
+double deltaChanceConquest (struct gameState* gms, int r, int c, int k) {
+	int wb = wa = 0, a = 0, i, 
+		nCellsAround = countCellsAround(gms, r, c);
+	double before, after;
 
 	for (i = 1; i <= MAXNUM; i++) {
 		if (i > k)
-			w += gms->nums[3-gms->turn][i];
+			wb += gms->nums[3-gms->turn][i];
+		if (i > k+1)
+			wa += gms->nums[3-gms->turn][i];
+
 		a += gms->nums[3-gms->turn][i];
 	}
 
-	return a == 0 ? 0 : w / ((double) a);
+	before = a == 0 ? 0 : wb / ((double) a);
+	after  = a == 0 ? 0 : wa / ((double) a);
+
+	return nCellsAround == 5 ? before : before - after;
 }
 
 double cost (struct gameState* gms, int r, int c, int k) {
@@ -174,7 +201,7 @@ double cost (struct gameState* gms, int r, int c, int k) {
 #ifdef HANDLE_TACTIC
 				gms->DefQ*
 #endif
-				chanceConquest(gms, gms->kmap[r][c])*gms->kmap[r][c];
+				deltaChanceConquest(gms, gms->kmap[r][c])*gms->kmap[r][c];
 		else 
 			if (gms->pmap[r][c] == 3 - gms->turn && gms->kmap[r][c] < k)
 				return 
