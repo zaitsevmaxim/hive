@@ -196,7 +196,7 @@ double cost (struct gameState* gms, int r, int c, int k) {
 	
 	if (gms->kmap[r][c] > 0) {
 		if (gms->pmap[r][c] == gms->turn && gms->kmap[r][c] < MAXNUM) 
-			return 1 + getWeight(gms, gms->kmap[r][c], r, c, gms->kmap[r][c]);
+			return 1 + getWeight(gms, r, c, gms->kmap[r][c]);
 		else 
 			if (gms->pmap[r][c] == 3 - gms->turn && gms->kmap[r][c] < k)
 				return gms->kmap[r][c];
